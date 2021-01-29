@@ -21,11 +21,11 @@ function forEach(array, fn) {
    map([1, 2, 3], (el) => el ** 2) // [1, 4, 9]
  */
 function map(array, fn) {
-  const copy_array = [];
+  const newArray = [];
   for (let i = 0; i < array.length; i++) {
-    copy_array[i] = fn(array[i], i, array);
+    newArray[i] = fn(array[i], i, array);
   }
-  return copy_array;
+  return newArray;
 }
 
 /*
@@ -35,7 +35,15 @@ function map(array, fn) {
  Пример:
    reduce([1, 2, 3], (all, current) => all + current) // 6
  */
-function reduce(array, fn, initial) {}
+function reduce(array, fn, initial) {
+  const hasInitial = typeof initial !== 'undefined';
+  let prev = hasInitial ? initial : array[0];
+
+  for (let i = hasInitial ? 0 : 1; i < array.length; i++) {
+    prev = fn(prev, array[i], i, array);
+  }
+  return prev;
+}
 
 /*
  Задание 4:
@@ -43,7 +51,16 @@ function reduce(array, fn, initial) {}
  Пример:
    upperProps({ name: 'Сергей', lastName: 'Петров' }) вернет ['NAME', 'LASTNAME']
  */
-function upperProps(obj) {}
+function upperProps(obj) {
+  const props = [];
+
+  for (const name in obj) {
+    props.push(name.toUpperCase());
+  }
+
+  return props;
+  ////return Object.keys(obj).map(name.toUppecase());
+}
 
 /*
  Задание 5 *:
@@ -54,6 +71,13 @@ function upperProps(obj) {}
    obj.foo = 2;
    console.log(obj.foo); // 4
  */
-function createProxy(obj) {}
+function createProxy(obj) {
+  return new Proxy(obj, {
+    set(obj, key, value) {
+      obj[key] = value ** 2;
+      return true;
+    },
+  });
+}
 
 export { forEach, map, reduce, upperProps, createProxy };
